@@ -41,7 +41,7 @@
 	],
     "require": {
 		"php": "^7.4 || ^8.0",
-		"ndiritu/sample-abstractions": "^1.0.2",
+		"ndiritu/sample-abstractions": "^1.4.0",
 		"ndiritu/sample-authentication-phpleague": "^1.0.0",
 		"ndiritu/sample-serialization-json": "^1.0.0",
 		"ndiritu/sample-http-guzzle": "^1.0.0"
