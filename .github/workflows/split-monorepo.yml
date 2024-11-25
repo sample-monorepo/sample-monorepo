@@ -1,0 +1,47 @@
+name: 'Packages Split'
+
+on:
+    push:
+        tags:
+            - '*'
+
+env:
+    # 1. for Github split
+    GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+jobs:
+    packages_split:
+        runs-on: ubuntu-latest
+
+        strategy:
+            fail-fast: false
+            matrix:
+                # define package to repository map
+                package:
+                    -
+                      local_path: 'abstractions'
+                      split_repository: 'sample-abstractions'
+                    -
+                      local_path: 'http'
+                      split_repository: 'sample-http'
+
+        steps:
+            - uses: actions/checkout@v4
+
+            # with tag
+            -
+              if: startsWith(github.ref, 'refs/tags/')
+              uses: "symplify/monorepo-split-github-action@v2"
+              with:
+                  tag: ${GITHUB_REF#refs/tags/}
+
+                  # ↓ split "packages/easy-coding-standard" directory
+                  package_directory: 'packages/${{ matrix.package.local_path }}'
+
+                  # ↓ into https://github.com/symplify/easy-coding-standard repository
+                  repository_organization: 'sample-monorepo'
+                  repository_name: '${{ matrix.package.split_repository }}'
+
+                  # ↓ the user signed under the split commit
+                  user_name: "Philip Gichuhi"
+                  user_email: "pgichuhi@microsoft.com"
