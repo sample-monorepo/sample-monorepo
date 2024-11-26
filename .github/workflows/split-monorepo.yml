@@ -24,7 +24,7 @@ jobs:
                       local_path: 'abstractions'
                       split_repository: 'sample-abstractions'
                     -
-                      local_path: 'http'
+                      local_path: 'http/guzzle'
                       split_repository: 'sample-http'
 
         steps:
