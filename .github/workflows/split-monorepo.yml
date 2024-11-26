@@ -2,6 +2,10 @@ name: 'Packages Split'
 
 on:
     workflow_dispatch:
+        inputs:
+            tag:
+                required: false
+                type: string
 
     push:
         tags:
@@ -33,6 +37,7 @@ jobs:
             -
                 uses: "symplify/monorepo-split-github-action@v2.3.0"
                 with:
+                    tag: ${{ inputs.tag }}
                     # ↓ split "packages/easy-coding-standard" directory
                     package_directory: 'packages/${{ matrix.package.local_path }}'
 
