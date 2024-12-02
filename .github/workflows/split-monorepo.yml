@@ -52,7 +52,7 @@ jobs:
                 path: ${{ matrix.package.package_name }}
                 ref: main
             - name: Pull & Publish subtree changes
-              working-directory: ${{ matrix.package.package_name }}
+              working-directory: ${{ github.workspace }}/${{ matrix.package.package_name }}
               env:
                 PACKAGE_NAME: ${{ matrix.package.package_name }}
                 MONOREPO_PATH: ${{ github.workspace }}/sample-monorepo
