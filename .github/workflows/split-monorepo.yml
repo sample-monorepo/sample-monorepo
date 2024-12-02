@@ -62,6 +62,7 @@ jobs:
                 git config pull.rebase false
                 git checkout -b release/$PACKAGE_NAME
                 git pull $MONOREPO_PATH release/$PACKAGE_NAME
+                git commit -am "Update $PACKAGE_NAME"
                 git config user.name "Philip Gichuhi"
                 git config user.email "philipndiritu@gmail.com"
                 git push origin release/$PACKAGE_NAME
