@@ -59,6 +59,7 @@ jobs:
               run: |
                 pwd
                 git branch
+                git config pull.rebase false
                 git checkout -b release/$PACKAGE_NAME
                 git pull $MONOREPO_PATH release/$PACKAGE_NAME
                 git config user.name "Philip Gichuhi"
