@@ -11,9 +11,8 @@ on:
         tags:
             - '*'
 
-env:
-    # 1. for Github split
-    GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+permissions:
+  contents: write
 
 jobs:
     packages_split:
@@ -25,27 +24,43 @@ jobs:
                 # define package to repository map
                 package:
                     -
-                      local_path: 'abstractions'
+                      local_path: 'packages/abstractions'
                       split_repository: 'sample-abstractions'
+                      package_name: 'abstractions'
                     -
-                      local_path: 'http/guzzle'
+                      local_path: 'packages/http/guzzle'
                       split_repository: 'sample-http'
+                      package_name: 'http'
 
         steps:
-            - uses: actions/checkout@v4
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                path: 'sample-monorepo'
+            - name: Split package to branch
+              working-directory: sample-monorepo
+              env:
+                FOLDER_PATH: ${{ matrix.package.local_path }}
+                REPOSITORY_NAME: ${{ matrix.package.split_repository }}
+                PACKAGE_NAME: ${{ matrix.package.package_name }}
+              run: |
+                git subtree split -P $FOLDER_PATH -b release/$PACKAGE_NAME
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                repository: sample-monorepo/${{ matrix.package.split_repository }}
+                path: ${{ matrix.package.package_name }}
+                ref: main
+            - name: Pull & Publish subtree changes
+              working-directory: ${{ matrix.package.package_name }}
+              env:
+                PACKAGE_NAME: ${{ matrix.package.package_name }}
+                MONOREPO_PATH: ${{ github.workspace }}/sample-monorepo
+              run: |
+                git checkout -b release/$PACKAGE_NAME
+                git pull $MONOREPO_PATH release/$PACKAGE_NAME
+                git config user.name "Philip Gichuhi"
+                git config user.email "philipndiritu@gmail.com"
+                git push origin release/$PACKAGE_NAME
 
-            -
-                uses: "symplify/monorepo-split-github-action@v2.3.0"
-                with:
-                    tag: ${{ inputs.tag }}
-                    # ↓ split "packages/easy-coding-standard" directory
-                    package_directory: 'packages/${{ matrix.package.local_path }}'
-
-                    # ↓ into https://github.com/symplify/easy-coding-standard repository
-                    repository_organization: 'sample-monorepo'
-                    repository_name: '${{ matrix.package.split_repository }}'
-
-                    # ↓ the user signed under the split commit
-                    user_name: "Philip Gichuhi"
-                    user_email: "pgichuhi@microsoft.com"
 
