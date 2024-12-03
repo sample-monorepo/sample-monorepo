@@ -35,36 +35,21 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v4
-              with:
-                path: 'sample-monorepo'
             - name: Split package to branch
-              working-directory: sample-monorepo
               env:
                 FOLDER_PATH: ${{ matrix.package.local_path }}
-                REPOSITORY_NAME: ${{ matrix.package.split_repository }}
                 PACKAGE_NAME: ${{ matrix.package.package_name }}
               run: |
                 git subtree split -P $FOLDER_PATH -b release/$PACKAGE_NAME
-            - name: Checkout repository
-              uses: actions/checkout@v4
-              with:
-                repository: sample-monorepo/${{ matrix.package.split_repository }}
-                path: ${{ matrix.package.package_name }}
-                ref: main
             - name: Pull & Publish subtree changes
-              working-directory: ${{ github.workspace }}/${{ matrix.package.package_name }}
               env:
                 PACKAGE_NAME: ${{ matrix.package.package_name }}
-                MONOREPO_PATH: ${{ github.workspace }}/sample-monorepo
+                REPOSITORY_NAME: ${{ matrix.package.split_repository }}
               run: |
-                pwd
-                git branch
-                git config pull.rebase false
-                git checkout -b release/$PACKAGE_NAME
+                git checkout release/$PACKAGE_NAME
                 git config --global user.email "philipndiritu@gmail.com"
                 git config --global user.name "Philip Gichuhi"
-                git pull --allow-unrelated-histories $MONOREPO_PATH release/$PACKAGE_NAME
-                git commit -am "Update $PACKAGE_NAME"
-                git push origin release/$PACKAGE_NAME
+                git remote add $PACKAGE_NAME git@github.com:sample-monorepo/$REPOSITORY_NAME.git
+                git push -u $PACKAGE_NAME release/$PACKAGE_NAME
 
 
