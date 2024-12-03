@@ -46,10 +46,12 @@ jobs:
                 PACKAGE_NAME: ${{ matrix.package.package_name }}
                 REPOSITORY_NAME: ${{ matrix.package.split_repository }}
               run: |
+                pwd
+                git branch
                 git checkout release/$PACKAGE_NAME
                 git config --global user.email "philipndiritu@gmail.com"
                 git config --global user.name "Philip Gichuhi"
-                git remote add $PACKAGE_NAME git@github.com:sample-monorepo/$REPOSITORY_NAME.git
+                git remote add $PACKAGE_NAME https://github.com/sample-monorepo/sample-abstractions.git
                 git push -u $PACKAGE_NAME release/$PACKAGE_NAME
 
 
