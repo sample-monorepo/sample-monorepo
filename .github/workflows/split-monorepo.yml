@@ -41,6 +41,23 @@ jobs:
                 PACKAGE_NAME: ${{ matrix.package.package_name }}
               run: |
                 git subtree split -P $FOLDER_PATH -b release/$PACKAGE_NAME
+            - name: Checkout individual repo
+              uses: actions/checkout@v4
+              with:
+                repository: sample-monorepo/${{ matrix.package.split_repository }}
+                ref: main
+                path: ${{ matrix.package.package_name }}
+            - name: Test push to another repo
+              working-directory: ${{ matrix.package.package_name }}
+              env:
+                PACKAGE_NAME: ${{ matrix.package.package_name }}
+              run: |
+                pwd
+                git branch
+                git checkout -b release/$PACKAGE_NAME
+                git config --global user.email "philipndiritu@gmail.com"
+                git config --global user.name "Philip Gichuhi"
+                git push -u origin release/$PACKAGE_NAME
             - name: Pull & Publish subtree changes
               env:
                 PACKAGE_NAME: ${{ matrix.package.package_name }}
