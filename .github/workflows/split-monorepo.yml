@@ -35,6 +35,8 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v4
+              with:
+                persist-credentials: false
             - name: Split package to branch
               env:
                 FOLDER_PATH: ${{ matrix.package.local_path }}
@@ -57,6 +59,7 @@ jobs:
                 git checkout -b release/$PACKAGE_NAME
                 git config --global user.email "philipndiritu@gmail.com"
                 git config --global user.name "Philip Gichuhi"
+                git config --unset-all http.https://github.com/.extraheader
                 git push -u origin release/$PACKAGE_NAME
             - name: Pull & Publish subtree changes
               env:
