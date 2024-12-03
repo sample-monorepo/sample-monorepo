@@ -49,6 +49,7 @@ jobs:
                 repository: sample-monorepo/${{ matrix.package.split_repository }}
                 ref: main
                 path: ${{ matrix.package.package_name }}
+                persist-credentials: false
             - name: Test push to another repo
               working-directory: ${{ matrix.package.package_name }}
               env:
@@ -59,7 +60,6 @@ jobs:
                 git checkout -b release/$PACKAGE_NAME
                 git config --global user.email "philipndiritu@gmail.com"
                 git config --global user.name "Philip Gichuhi"
-                git config --unset-all http.https://github.com/.extraheader
                 git push -u origin release/$PACKAGE_NAME
             - name: Pull & Publish subtree changes
               env:
