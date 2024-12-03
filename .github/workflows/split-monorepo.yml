@@ -61,10 +61,10 @@ jobs:
                 git branch
                 git config pull.rebase false
                 git checkout -b release/$PACKAGE_NAME
+                git config --global user.email "philipndiritu@gmail.com"
+                git config --global user.name "Philip Gichuhi"
                 git pull --allow-unrelated-histories $MONOREPO_PATH release/$PACKAGE_NAME
                 git commit -am "Update $PACKAGE_NAME"
-                git config user.name "Philip Gichuhi"
-                git config user.email "philipndiritu@gmail.com"
                 git push origin release/$PACKAGE_NAME
 
 
