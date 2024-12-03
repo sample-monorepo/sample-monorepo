@@ -60,7 +60,7 @@ jobs:
                 git checkout -b release/$PACKAGE_NAME
                 git config --global user.email "philipndiritu@gmail.com"
                 git config --global user.name "Philip Gichuhi"
-                git push -u origin release/$PACKAGE_NAME
+                git push git@github.com:sample-monorepo/sample-abstractions.git release/$PACKAGE_NAME
             - name: Pull & Publish subtree changes
               env:
                 PACKAGE_NAME: ${{ matrix.package.package_name }}
