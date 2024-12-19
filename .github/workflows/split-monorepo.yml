@@ -49,7 +49,6 @@ jobs:
                 repository: sample-monorepo/${{ matrix.package.split_repository }}
                 ref: main
                 path: ${{ matrix.package.package_name }}
-                persist-credentials: false
             - name: Test push to another repo
               working-directory: ${{ matrix.package.package_name }}
               env:
@@ -64,8 +63,6 @@ jobs:
                 # git config --unset-all http.https://github.com/.extraheader
                 echo "Unset extraheaders complete"
                 git config -l
-                git remote rm origin
-                git remote add origin 'git@github.com:sample-monorepo/sample-abstractions.git'
                 git push origin release/$PACKAGE_NAME
             - name: Pull & Publish subtree changes
               env:
