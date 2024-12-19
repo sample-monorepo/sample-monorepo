@@ -58,9 +58,12 @@ jobs:
                 pwd
                 git branch
                 git checkout -b release/$PACKAGE_NAME
-                git config --global user.email "philipndiritu@gmail.com"
-                git config --global user.name "Philip Gichuhi"
+                git config user.email "philipndiritu@gmail.com"
+                git config user.name "Philip Gichuhi"
+                echo "Git config complete"
                 git config --unset-all http.https://github.com/.extraheader
+                echo "Unset extraheaders complete"
+                git config -l
                 git push origin release/$PACKAGE_NAME
             - name: Pull & Publish subtree changes
               env:
