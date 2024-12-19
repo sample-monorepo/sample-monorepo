@@ -61,7 +61,7 @@ jobs:
                 git config user.email "philipndiritu@gmail.com"
                 git config user.name "Philip Gichuhi"
                 echo "Git config complete"
-                git config --unset-all http.https://github.com/.extraheader
+                # git config --unset-all http.https://github.com/.extraheader
                 echo "Unset extraheaders complete"
                 git config -l
                 git push origin release/$PACKAGE_NAME
