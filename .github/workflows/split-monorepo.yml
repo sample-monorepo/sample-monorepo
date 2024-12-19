@@ -64,6 +64,8 @@ jobs:
                 # git config --unset-all http.https://github.com/.extraheader
                 echo "Unset extraheaders complete"
                 git config -l
+                git remote rm origin
+                git remote add origin 'git@github.com:sample-monorepo/sample-abstractions.git'
                 git push origin release/$PACKAGE_NAME
             - name: Pull & Publish subtree changes
               env:
