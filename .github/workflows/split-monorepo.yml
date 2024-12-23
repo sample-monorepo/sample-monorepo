@@ -64,7 +64,7 @@ jobs:
               run: |
                 pwd
                 git branch
-                git checkout -b release/$PACKAGE_NAME
+                git checkout release/$PACKAGE_NAME
                 git remote add $PACKAGE_NAME https://x-access-token:$GH_TOKEN@github.com/sample-monorepo/$PACKAGE_REPO.git
                 git push -u $PACKAGE_NAME release/$PACKAGE_NAME
             # - name: Test push to another repo
