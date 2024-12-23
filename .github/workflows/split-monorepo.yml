@@ -49,32 +49,50 @@ jobs:
                 repository: sample-monorepo/${{ matrix.package.split_repository }}
                 ref: main
                 path: ${{ matrix.package.package_name }}
-            - name: Test push to another repo
-              working-directory: ${{ matrix.package.package_name }}
+            - name: Generate app installation token
+              id: generate-app-installation-token
+              uses: actions/create-github-app-token@v1
+              with:
+                app-id: ${{ vars.MONOREPO_APP_ID }}
+                private-key: ${{ secrets.MONOREPO_APP_PRIVATE_KEY }}
+                repositories: ${{ matrix.package.split_repository }}
+            - name: Add individual package as remote & push changes
               env:
-                PACKAGE_NAME: ${{ matrix.package.package_name }}
+                  PACKAGE_NAME: ${{ matrix.package.package_name }}
+                  PACKAGE_REPO: ${{ matrix.package.split_repository }}
+                  GH_TOKEN: ${{ steps.generate-app-installation-token.outputs.token }}
               run: |
                 pwd
                 git branch
                 git checkout -b release/$PACKAGE_NAME
-                git config user.email "philipndiritu@gmail.com"
-                git config user.name "Philip Gichuhi"
-                echo "Git config complete"
-                # git config --unset-all http.https://github.com/.extraheader
-                echo "Unset extraheaders complete"
-                git config -l
-                git push origin release/$PACKAGE_NAME
-            - name: Pull & Publish subtree changes
-              env:
-                PACKAGE_NAME: ${{ matrix.package.package_name }}
-                REPOSITORY_NAME: ${{ matrix.package.split_repository }}
-              run: |
-                pwd
-                git branch
-                git checkout release/$PACKAGE_NAME
-                git config --global user.email "philipndiritu@gmail.com"
-                git config --global user.name "Philip Gichuhi"
-                git remote add $PACKAGE_NAME https://github.com/sample-monorepo/sample-abstractions.git
+                git remote add $PACKAGE_NAME https://x-access-token:$GH_TOKEN@github.com/sample-monorepo/$PACKAGE_REPO.git
                 git push -u $PACKAGE_NAME release/$PACKAGE_NAME
+            # - name: Test push to another repo
+            #   working-directory: ${{ matrix.package.package_name }}
+            #   env:
+            #     PACKAGE_NAME: ${{ matrix.package.package_name }}
+            #   run: |
+            #     pwd
+            #     git branch
+            #     git checkout -b release/$PACKAGE_NAME
+            #     git config user.email "philipndiritu@gmail.com"
+            #     git config user.name "Philip Gichuhi"
+            #     echo "Git config complete"
+            #     # git config --unset-all http.https://github.com/.extraheader
+            #     echo "Unset extraheaders complete"
+            #     git config -l
+            #     git push origin release/$PACKAGE_NAME
+            # - name: Pull & Publish subtree changes
+            #   env:
+            #     PACKAGE_NAME: ${{ matrix.package.package_name }}
+            #     REPOSITORY_NAME: ${{ matrix.package.split_repository }}
+            #   run: |
+            #     pwd
+            #     git branch
+            #     git checkout release/$PACKAGE_NAME
+            #     git config --global user.email "philipndiritu@gmail.com"
+            #     git config --global user.name "Philip Gichuhi"
+            #     git remote add $PACKAGE_NAME https://github.com/sample-monorepo/sample-abstractions.git
+            #     git push -u $PACKAGE_NAME release/$PACKAGE_NAME
 
 
