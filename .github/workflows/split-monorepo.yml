@@ -37,7 +37,9 @@ jobs:
               uses: actions/checkout@v4
               with:
                 persist-credentials: false
+                path: 'monorepo'
             - name: Split package to branch
+              working-directory: ${{ github.workspace }}/monorepo
               env:
                 FOLDER_PATH: ${{ matrix.package.local_path }}
                 PACKAGE_NAME: ${{ matrix.package.package_name }}
@@ -56,17 +58,31 @@ jobs:
                 app-id: ${{ vars.MONOREPO_APP_ID }}
                 private-key: ${{ secrets.MONOREPO_APP_PRIVATE_KEY }}
                 repositories: ${{ matrix.package.split_repository }}
-            - name: Add individual package as remote & push changes
+            - name: Pull changes from mono-repo to new branch in individual repo
+              working-directory: ${{ github.workspace }}/${{ matrix.package.package_name }}
               env:
-                  PACKAGE_NAME: ${{ matrix.package.package_name }}
-                  PACKAGE_REPO: ${{ matrix.package.split_repository }}
-                  GH_TOKEN: ${{ steps.generate-app-installation-token.outputs.token }}
+                PACKAGE_NAME: ${{ matrix.package.package_name }}
+                PACKAGE_REPO: ${{ matrix.package.split_repository }}
+                GH_TOKEN: ${{ steps.generate-app-installation-token.outputs.token }}
               run: |
                 pwd
                 git branch
-                git checkout release/$PACKAGE_NAME
-                git remote add $PACKAGE_NAME https://x-access-token:$GH_TOKEN@github.com/sample-monorepo/$PACKAGE_REPO.git
-                git push -u $PACKAGE_NAME release/$PACKAGE_NAME
+                git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/sample-monorepo/$PACKAGE_REPO.git
+                git checkout -b release/$PACKAGE_NAME
+                git pull $GITHUB_WORKSPACE/mono-repo release/$PACKAGE_NAME
+                git status
+                git push origin release/$PACKAGE_NAME
+            # - name: Add individual package as remote & push changes
+            #   env:
+            #       PACKAGE_NAME: ${{ matrix.package.package_name }}
+            #       PACKAGE_REPO: ${{ matrix.package.split_repository }}
+            #       GH_TOKEN: ${{ steps.generate-app-installation-token.outputs.token }}
+            #   run: |
+            #     pwd
+            #     git branch
+            #     git checkout release/$PACKAGE_NAME
+            #     git remote add $PACKAGE_NAME https://x-access-token:$GH_TOKEN@github.com/sample-monorepo/$PACKAGE_REPO.git
+            #     git push -u $PACKAGE_NAME release/$PACKAGE_NAME
             # - name: Test push to another repo
             #   working-directory: ${{ matrix.package.package_name }}
             #   env:
