@@ -4,7 +4,7 @@
     "type": "library",
     "license": "MIT",
     "minimum-stability": "stable",
-	"version": "1.5.2",
+	"version": "1.5.3",
     "autoload": {
         "psr-4": {
           "Microsoft\\Kiota\\Abstractions\\": "src/"

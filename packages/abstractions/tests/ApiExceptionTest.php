@@ -18,5 +18,6 @@ class ApiExceptionTest extends TestCase
 
         $this->assertEquals(400, $apiException->getResponseStatusCode());
         $this->assertEquals(['Content-Type' => ['application/json'], 'Content-Length' => ['200']], $apiException->getResponseHeaders());
+
     }
 }
