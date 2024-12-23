@@ -1,6 +1,6 @@
 {
     "name": "ndiritu/sample-bundle",
-    "description": "Test kiota bundle package",
+    "description": "Test kiota bundle package ...",
     "type": "library",
     "authors": [
         {
@@ -9,6 +9,7 @@
         }
     ],
     "minimum-stability": "stable",
+	"version": "1.5.2",
 	"repositories": [
 		{
 			"type": "path",
