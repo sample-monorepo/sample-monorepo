@@ -24,7 +24,7 @@ jobs:
                 # define package to repository map
                 package:
                     -
-                      local_path: 'packages/abstractions'
+                      local_path: 'packages/prod-abstractions'
                       split_repository: 'sample-abstractions'
                       package_name: 'abstractions'
                     -
