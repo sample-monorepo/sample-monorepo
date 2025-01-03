@@ -54,7 +54,7 @@ jobs:
                   LOCAL_PATH: ${{ matrix.package.local_path }}
               run: |
                 git remote add $PACKAGE_NAME https://x-access-token:$GH_TOKEN@github.com/sample-monorepo/$PACKAGE_REPO.git
-                git subtree push -P $LOCAL_PATH $PACKAGE_NAME release/$PACKAGE_NAME
+                git subtree push --no-squash -P $LOCAL_PATH $PACKAGE_NAME release/$PACKAGE_NAME
             # - name: Test push to another repo
             #   working-directory: ${{ matrix.package.package_name }}
             #   env:
