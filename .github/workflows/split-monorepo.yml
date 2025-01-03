@@ -27,28 +27,18 @@ jobs:
                       local_path: 'packages/prod-abstractions'
                       split_repository: 'sample-abstractions'
                       package_name: 'abstractions'
+                      remote_url: 'git@github.com:sample-monorepo/sample-abstractions.git'
                     -
                       local_path: 'packages/http/guzzle'
                       split_repository: 'sample-http'
                       package_name: 'http'
+                      remote_url: 'git@github.com:sample-monorepo/sample-http.git'
 
         steps:
             - name: Checkout
               uses: actions/checkout@v4
               with:
                 persist-credentials: false
-            - name: Split package to branch
-              env:
-                FOLDER_PATH: ${{ matrix.package.local_path }}
-                PACKAGE_NAME: ${{ matrix.package.package_name }}
-              run: |
-                git subtree split -P $FOLDER_PATH -b release/$PACKAGE_NAME
-            - name: Checkout individual repo
-              uses: actions/checkout@v4
-              with:
-                repository: sample-monorepo/${{ matrix.package.split_repository }}
-                ref: main
-                path: ${{ matrix.package.package_name }}
             - name: Generate app installation token
               id: generate-app-installation-token
               uses: actions/create-github-app-token@v1
@@ -56,17 +46,15 @@ jobs:
                 app-id: ${{ vars.MONOREPO_APP_ID }}
                 private-key: ${{ secrets.MONOREPO_APP_PRIVATE_KEY }}
                 repositories: ${{ matrix.package.split_repository }}
-            - name: Add individual package as remote & push changes
+            - name: Git subtree push changes
               env:
                   PACKAGE_NAME: ${{ matrix.package.package_name }}
                   PACKAGE_REPO: ${{ matrix.package.split_repository }}
                   GH_TOKEN: ${{ steps.generate-app-installation-token.outputs.token }}
+                  LOCAL_PATH: ${{ matrix.package.local_path }}
               run: |
-                pwd
-                git branch
-                git checkout release/$PACKAGE_NAME
                 git remote add $PACKAGE_NAME https://x-access-token:$GH_TOKEN@github.com/sample-monorepo/$PACKAGE_REPO.git
-                git push -u $PACKAGE_NAME release/$PACKAGE_NAME
+                git subtree push -P $LOCAL_PATH $PACKAGE_NAME release/$PACKAGE_NAME
             # - name: Test push to another repo
             #   working-directory: ${{ matrix.package.package_name }}
             #   env:
