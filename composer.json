@@ -1,0 +1,12 @@
+{
+    "name": "ndiritu/sample-monorepo",
+    "description": "Test monorepo",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Philip Gichuhi",
+            "email": "pgichuhi@microsoft.com"
+        }
+    ],
+    "require": {}
+}
