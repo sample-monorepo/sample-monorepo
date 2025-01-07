@@ -1,8 +1,9 @@
 {
-    "name": "microsoft/kiota-abstractions",
+    "name": "ndiritu/kiota-abstractions",
     "description": "Abstractions for Kiota",
     "type": "library",
     "license": "MIT",
+	"version": "1.4.0",
     "authors": [
       {
         "name": "Microsoft Graph Client Tooling",
