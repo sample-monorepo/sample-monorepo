@@ -23,7 +23,7 @@ jobs:
                       split_repository: 'sample-abstractions'
                       package_name: 'abstractions'
                     -
-                      local_path: 'packages/http/guzzle'
+                      local_path: 'packages/http'
                       split_repository: 'sample-http'
                       package_name: 'http'
 
