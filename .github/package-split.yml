@@ -1,0 +1,58 @@
+name: 'Packages Split'
+
+on:
+    workflow_dispatch:
+    push:
+        tags:
+            - '*'
+
+permissions:
+  contents: write
+
+jobs:
+    packages_split:
+        runs-on: ubuntu-latest
+
+        strategy:
+            fail-fast: false
+            matrix:
+                # define package to repository map
+                package:
+                    -
+                      local_path: 'packages/abstractions'
+                      split_repository: 'sample-abstractions'
+                      package_name: 'abstractions'
+                    -
+                      local_path: 'packages/http/guzzle'
+                      split_repository: 'sample-http'
+                      package_name: 'http'
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                persist-credentials: false
+                fetch-depth: 0
+            - name: Split package to branch
+              env:
+                FOLDER_PATH: ${{ matrix.package.local_path }}
+                PACKAGE_NAME: ${{ matrix.package.package_name }}
+              run: |
+                git subtree split -P $FOLDER_PATH -b release/$PACKAGE_NAME
+            - name: Generate app installation token
+              id: generate-app-installation-token
+              uses: actions/create-github-app-token@v1
+              with:
+                app-id: ${{ vars.MONOREPO_APP_ID }}
+                private-key: ${{ secrets.MONOREPO_APP_PRIVATE_KEY }}
+                repositories: ${{ matrix.package.split_repository }}
+            - name: Pull changes from mono-repo to new branch in individual repo
+              env:
+                PACKAGE_NAME: ${{ matrix.package.package_name }}
+                PACKAGE_REPO: ${{ matrix.package.split_repository }}
+                GH_TOKEN: ${{ steps.generate-app-installation-token.outputs.token }}
+              run: |
+                git checkout release/$PACKAGE_NAME
+                git remote add $PACKAGE_NAME https://x-access-token:$GH_TOKEN@github.com/sample-monorepo/$PACKAGE_REPO.git
+                git push -u $PACKAGE_NAME release/$PACKAGE_NAME
+
