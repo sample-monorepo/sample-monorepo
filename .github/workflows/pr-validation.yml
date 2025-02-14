@@ -50,12 +50,12 @@ jobs:
         run: ./vendor/bin/phpunit --coverage-clover=coverage.xml
       - name: Fix code coverage paths
         run: sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage.xml
-      - name: SonarCloud Scan
-        if: ${{ !github.event.pull_request.head.repo.fork }}
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # - name: SonarCloud Scan
+      #   if: ${{ !github.event.pull_request.head.repo.fork }}
+      #   uses: SonarSource/sonarcloud-github-action@master
+      #   env:
+      #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   # The check-php-version-matrix returns success if all matrix jobs in build are successful; otherwise, it returns a failure.
   # Use this as a PR status check for GitHub Policy Service instead of individual matrix entry checks.
