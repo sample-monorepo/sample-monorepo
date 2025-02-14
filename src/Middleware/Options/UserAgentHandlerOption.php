@@ -11,7 +11,7 @@ use Psr\Http\Message\RequestInterface;
 class UserAgentHandlerOption implements RequestOption
 {
     private string $productName = "kiota-php";
-    private string $productVersion = Constants::KIOTA_HTTP_CLIENT_VERSION;
+    private string $productVersion = Constants::VERSION;
     private bool $enabled = true;
 
     /** @var callable(RequestInterface $request): PromiseInterface|null */

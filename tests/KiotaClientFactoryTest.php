@@ -33,7 +33,7 @@ class KiotaClientFactoryTest extends TestCase
     public function testMiddlewareProcessing()
     {
         $guzzleVersion = ClientInterface::MAJOR_VERSION;
-        $kiotaVersion = Constants::KIOTA_HTTP_CLIENT_VERSION;
+        $kiotaVersion = Constants::VERSION;
         $userAgentHeaderValue = "GuzzleHttp/$guzzleVersion kiota-php/$kiotaVersion";
         $mockResponses = [
             function (RequestInterface $request) use ($userAgentHeaderValue) {
