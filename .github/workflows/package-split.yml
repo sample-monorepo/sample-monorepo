@@ -55,4 +55,16 @@ jobs:
                 git checkout release/$PACKAGE_NAME
                 git remote add $PACKAGE_NAME https://x-access-token:$GH_TOKEN@github.com/sample-monorepo/$PACKAGE_REPO.git
                 git push -u $PACKAGE_NAME release/$PACKAGE_NAME
+            - name: Create PR
+              env:
+                GH_TOKEN: ${{ steps.generate-app-installation-token.outputs.token }}
+                PACKAGE_NAME: ${{ matrix.package.package_name }}
+                PACKAGE_REPO: ${{ matrix.package.split_repository }}
+              run: |
+                title="Mono-repo updates for release"
+                body="This PR contains updates from the Sample monorepo. Merging these changes will trigger Release-Please on this repository."
+                gh auth login
+                gh pr create -t $title -b $body -B main -H release/$PACKAGE_NAME --repo sample-monorepo/$PACKAGE_REPO
+                pr_number=$(gh pr list --author 'PHP Monorepo split[bot]' --state open --repo sample-monorepo/$PACKAGE_REPO --json url --jq '.[0].url')
+                gh pr merge $pr_number --auto
 
