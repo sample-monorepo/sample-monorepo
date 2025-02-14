@@ -17,7 +17,7 @@ class ObservabilityOption implements RequestOption
      */
     public function __construct()
     {
-        self::$tracer = Globals::tracerProvider()->getTracer(self::getTracerInstrumentationName(), Constants::KIOTA_HTTP_CLIENT_VERSION);
+        self::$tracer = Globals::tracerProvider()->getTracer(self::getTracerInstrumentationName(), Constants::VERSION);
     }
 
     /**
@@ -53,7 +53,7 @@ class ObservabilityOption implements RequestOption
     {
         if (self::$tracer === null) {
             self::$tracer = Globals::tracerProvider()->getTracer(self::getTracerInstrumentationName(),
-                Constants::KIOTA_HTTP_CLIENT_VERSION);
+                Constants::VERSION);
         }
         return self::$tracer;
     }
