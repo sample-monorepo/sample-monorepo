@@ -63,7 +63,7 @@ jobs:
               run: |
                 title="Mono-repo updates for release"
                 body="This PR contains updates from the Sample monorepo. Merging these changes will trigger Release-Please on this repository."
-                gh pr create -t "$title" -b "$body" -B main -H release/$PACKAGE_NAME --repo sample-monorepo/$PACKAGE_REPO
-                pr_number=$(gh pr list --author "php-monorepo-split[bot]" --state open --repo sample-monorepo/$PACKAGE_REPO -B main -H release/$PACKAGE_NAME --json number --jq '.[0].number')
-                gh pr merge $pr_number --auto
+                prUrl=$(gh pr create -t "$title" -b "$body" -B main -H release/$PACKAGE_NAME --repo sample-monorepo/$PACKAGE_REPO)
+                echo "PR created"
+                gh pr merge $prUrl --auto
 
