@@ -1,5 +1,5 @@
 {
-    "name": "ndiritu/kiota-abstractions",
+    "name": "microsoft/kiota-abstractions",
     "description": "Abstractions for Kiota",
     "type": "library",
     "license": "MIT",
