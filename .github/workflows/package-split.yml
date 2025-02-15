@@ -64,6 +64,5 @@ jobs:
                 title="Mono-repo updates for release"
                 body="This PR contains updates from the Sample monorepo. Merging these changes will trigger Release-Please on this repository."
                 prUrl=$(gh pr create -t "$title" -b "$body" -B main -H release/$PACKAGE_NAME --repo sample-monorepo/$PACKAGE_REPO)
-                echo "PR created"
                 gh pr merge $prUrl --merge --auto
 
